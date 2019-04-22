@@ -1,0 +1,37 @@
+@import url('//at.alicdn.com/t/font_1152412_eeegcwi77ju.css');
+.header {
+    background: rgba(0, 0, 0, 0);
+    position: absolute;
+    top:0;
+    width: 100%;
+    color: #fff;
+    z-index: 199;
+    padding: 10px;
+    i {
+        font-size: 28px;
+        float: right;
+    }
+}
+
+.opened-header {
+    background: rgba(8, 8, 8, 0.9);
+}
+
+.menu-wrapper {
+    width: 100%;    
+    text-align: center;
+    // background: rgba(8, 8, 8, 0.9);
+    clear: both;
+    li {
+        list-style: none;
+        width: 67%;
+        margin: 0 auto;
+        height: 45px;
+        line-height: 45px;
+        border-bottom: 0.5px solid rgba(200, 200, 200, 0.9);
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+}
