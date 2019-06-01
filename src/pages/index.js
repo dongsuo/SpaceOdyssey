@@ -43,7 +43,9 @@ export default class Index extends Component {
       todayWeather: {
         sol: 0
       },
-      imageUrl: undefined
+      imageUrl: undefined,
+      contentStyle: {},
+      touchStart: {}
     };
   }
 
@@ -73,80 +75,112 @@ export default class Index extends Component {
     });
   }
 
+  handleStart(evt) {
+    this.setState({
+      touchStart: {
+        pageX: evt.changedTouches[0].pageX,
+        pageY: evt.changedTouches[0].pageY
+      }
+    })
+  }
+
+  handleMove(evt) {
+    const left = evt.changedTouches[0].pageX - this.state.touchStart.pageX
+    // const top = evt.changedTouches[0].pageY - this.state.touchStart.pageY
+    console.log(left)
+    if (left) {
+      this.setState({
+        contentStyle: {
+          left
+        }
+      })
+    }
+  }
+
+  handleEnd(evt) {
+    this.setState({
+      contentStyle: {
+        left: 0
+      }
+    })
+  }
+
   render() {
     return (
-      <div className='page'>
-        <div className='section temperature-section'>
-          {this.state.todayWeather.data && (
-            <React.Fragment>
-              <div className='temperature-num'>
-                <div className='main-num'>
-                  {this.state.todayWeather.data.AT.av.toFixed(1)}℃
+      <div className='index-page page-wrapper'>
+        <div className='content-wrapper' style={this.state.contentStyle} onTouchStart={this.handleStart.bind(this)} onTouchMove={this.handleMove.bind(this)} onTouchEnd={this.handleEnd.bind(this)}>
+          <div className='section temperature-section'>
+            {this.state.todayWeather.data && (
+              <React.Fragment>
+                <div className='temperature-num'>
+                  <div className='main-num'>
+                    {this.state.todayWeather.data.AT.av.toFixed(1)}℃
                   <span className='sm-text'>平均</span>
+                  </div>
+                  <div className='second-num'>
+                    {this.state.todayWeather.data.AT.mx.toFixed(1)}℃ ~{" "}
+                    {this.state.todayWeather.data.AT.mn.toFixed(1)}℃
                 </div>
-                <div className='second-num'>
-                  {this.state.todayWeather.data.AT.mx.toFixed(1)}℃ ~{" "}
-                  {this.state.todayWeather.data.AT.mn.toFixed(1)}℃
-                </div>
-                <div className='second-num'>
-                  {
-                    windDir[
-                    this.state.todayWeather.data.WD.most_common.compass_point
-                    ]
-                  }
-                  风 {windLevelCal(this.state.todayWeather.data.HWS.mn)}-
+                  <div className='second-num'>
+                    {
+                      windDir[
+                      this.state.todayWeather.data.WD.most_common.compass_point
+                      ]
+                    }
+                    风 {windLevelCal(this.state.todayWeather.data.HWS.mn)}-
                   {windLevelCal(this.state.todayWeather.data.HWS.mx)}级
                 </div>
-              </div>
-              <div className='location-wrapper'>
-                <div className='location-date'>
-                  {this.state.today + " "}
-                  {/* {` SOL ${this.state.todayWeather.sol}`} */}
                 </div>
-                <div className='location'>埃律西昂平原·火星</div>
-                <div className='location'>太阳系·猎户支臂·银河系</div>
-              </div>
-            </React.Fragment>
-          )}
-        </div>
-        {/* <Image className='image' mode='aspectFill' src={this.state.imageUrl}></Image> */}
-        {/* <div style={{'text-transform': 'capitalize', 'font-size': '16px', 'text-align': 'center'}}>{(this.state.imageDesc || 'Photo ') +' ' } By NASA</div> */}
-
-        <div className='section'>
-          {this.state.todayWeather.data &&
-            this.state.todayWeather.data.WD.most_common && (
-              <React.Fragment>
-                <div>风速</div>
-                <div className='wd-section'>
-                  <div className='second-num'>
-                    {this.state.todayWeather.data.HWS.mx}m/s<span>最高</span>
+                <div className='location-wrapper'>
+                  <div className='location-date'>
+                    {this.state.today + " "}
+                    {/* {` SOL ${this.state.todayWeather.sol}`} */}
                   </div>
-                  <div className='second-num'>
-                    {this.state.todayWeather.data.HWS.mn}m/s<span>最低</span>
-                  </div>
-                  <div className='second-num'>
-                    {this.state.todayWeather.data.HWS.av}m/s<span>平均</span>
-                  </div>
+                  <div className='location'>埃律西昂平原·火星</div>
+                  <div className='location'>太阳系·猎户支臂·银河系</div>
                 </div>
               </React.Fragment>
             )}
-        </div>
+          </div>
+          {/* <Image className='image' mode='aspectFill' src={this.state.imageUrl}></Image> */}
+          {/* <div style={{'text-transform': 'capitalize', 'font-size': '16px', 'text-align': 'center'}}>{(this.state.imageDesc || 'Photo ') +' ' } By NASA</div> */}
 
-        <div className='section'>
-          <div>气压</div>
-          {this.state.todayWeather.data && (
-            <div className='wd-section'>
-              <div className='second-num'>
-                {this.state.todayWeather.data.PRE.mx}Pa<span>最高</span>
+          <div className='section'>
+            {this.state.todayWeather.data &&
+              this.state.todayWeather.data.WD.most_common && (
+                <React.Fragment>
+                  <div>风速</div>
+                  <div className='wd-section'>
+                    <div className='second-num'>
+                      {this.state.todayWeather.data.HWS.mx.toFixed(2)}m/s<span>最高</span>
+                    </div>
+                    <div className='second-num'>
+                      {this.state.todayWeather.data.HWS.mn.toFixed(2)}m/s<span>最低</span>
+                    </div>
+                    <div className='second-num'>
+                      {this.state.todayWeather.data.HWS.av.toFixed(2)}m/s<span>平均</span>
+                    </div>
+                  </div>
+                </React.Fragment>
+              )}
+          </div>
+
+          <div className='section'>
+            <div>气压</div>
+            {this.state.todayWeather.data && (
+              <div className='wd-section'>
+                <div className='second-num'>
+                  {this.state.todayWeather.data.PRE.mx.toFixed(2)}Pa<span>最高</span>
+                </div>
+                <div className='second-num'>
+                  {this.state.todayWeather.data.PRE.mn.toFixed(2)}Pa<span>最低</span>
+                </div>
+                <div className='second-num'>
+                  {this.state.todayWeather.data.PRE.av.toFixed(2)}Pa<span>平均</span>
+                </div>
               </div>
-              <div className='second-num'>
-                {this.state.todayWeather.data.PRE.mn}Pa<span>最低</span>
-              </div>
-              <div className='second-num'>
-                {this.state.todayWeather.data.PRE.av}Pa<span>平均</span>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     );
